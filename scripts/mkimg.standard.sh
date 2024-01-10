@@ -72,6 +72,52 @@ profile_extended() {
 	apks="$apks linux-firmware linux-firmware-none"
 }
 
+profile_homelab() {
+	profile_standard
+	profile_abbrev="lab"
+	title="Homelab"
+	kernel_addons="xtables-addons zfs"
+	boot_addons="amd-ucode intel-ucode"
+	desc="Similar to standard.
+		Added more tools that helps with faster configurations, debugging."
+	arch="aarch64 armv7 x86 x86_64"
+	apks="$apks
+		coreutils ethtool hwids doas sudo
+		logrotate lsof lm_sensors lxc lxc-templates
+		pciutils strace tmux nnn
+		usbutils v86d vim xtables-addons curl wget
+
+		ca-certificates dhcp
+		htop
+		ip6tables iproute2 iproute2-qos
+		iptables iputils nftables iw kea ldns-tools links
+		tcpdump tinyproxy unbound
+
+		btrfs-progs cksfv dosfstools cryptsetup
+		e2fsprogs e2fsprogs-extra efibootmgr f2fs-tools
+		grub-bios grub-efi lvm2 lz4 mdadm mkinitfs mtools nfs-utils
+		parted rsync sfdisk lsblk syslinux util-linux xfsprogs zstd zfs
+
+    mandoc-apropos mandoc mandoc-doc mandoc-dev man-pages
+    tig git shadow ncdu ripgrep
+    build-base gcc build-base alpine-sdk bash
+    docker docker-cli-compose
+    qemu qemu-img qemu-system-x86_64 qemu-guest-agent qemu-tools qemu-doc 
+    make openrc
+    go nodejs npm python3 py3-pip
+		"
+
+	local _k _a
+	for _k in $kernel_flavors; do
+		apks="$apks linux-$_k"
+		for _a in $kernel_addons; do
+			apks="$apks $_a-$_k"
+		done
+	done
+	apks="$apks linux-firmware linux-firmware-none"
+  apkovl="aports/scripts/genapkovl-mkimgoverlay.sh"
+}
+
 profile_virt() {
 	profile_standard
 	profile_abbrev="virt"

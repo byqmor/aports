@@ -27,6 +27,20 @@ rc_add() {
 tmp="$(mktemp -d)"
 trap cleanup EXIT
 
+makefile root:root 0644 /root/.profile <<EOF
+alias vi=vim
+alias ls="ls -la"
+alias gst="git status"
+alias apka="doas apk update && doas apk add --no-cache"
+alias apkadd="apk update && apk add --no-cache"
+export EDITOR="vim"
+EOF
+
+makefile root:root 0444 /etc/doas.d/doas.conf <<EOF
+permit :abuild
+permit persist :abuild
+permit persist :wheel
+EOF
 mkdir -p "$tmp"/etc
 makefile root:root 0644 "$tmp"/etc/hostname <<EOF
 $HOSTNAME
@@ -51,6 +65,7 @@ rc_add dmesg sysinit
 rc_add mdev sysinit
 rc_add hwdrivers sysinit
 rc_add modloop sysinit
+rc_add docker sysinit
 
 rc_add hwclock boot
 rc_add modules boot
