@@ -29,9 +29,9 @@ for i in vmlinuz${suffix} System.map${suffix} config${suffix}; do
 	fi
 done
 
-cp "$bootimage" "$destdir"/vmlinuz${suffix}
-cp "$mapfile" "$destdir"/System.map-${kernelrelease}
-cp "$config" "$destdir"/config-${kernelrelease}
+cp "$bootimage" "$destdir"/vmlinuz
+cp "$mapfile" "$destdir"/System.map
+cp "$config" "$destdir"/config
 
 destdir_root="${destdir%/boot}"
 if [ "$destdir_root" != "$destdir" ]; then
